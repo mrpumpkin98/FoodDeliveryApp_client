@@ -13,6 +13,11 @@ import {
 import DismissKeyboardView from '../constants/DismissKeyboardView';
 import axios, {AxiosError} from 'axios';
 
+interface ErrorResponse {
+  message: string;
+  // 필요하다면 다른 필드도 추가
+}
+
 function SignUp() {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState('');
@@ -75,10 +80,9 @@ function SignUp() {
       console.log(response);
       Alert.alert('알림', '회원가입 되었습니다.');
     } catch (error) {
-      const errorResponse = (error as AxiosError).response;
-      console.error(errorResponse);
-      if (errorResponse) {
-        Alert.alert('알림', errorResponse?.data?.message);
+      const errorResponse = (error as AxiosError<ErrorResponse>).response;
+      if (errorResponse && errorResponse.data.message) {
+        Alert.alert('알림', errorResponse.data.message);
       }
     } finally {
       setLoading(false);
