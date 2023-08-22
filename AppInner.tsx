@@ -13,7 +13,7 @@ import {useSelector} from 'react-redux';
 import useSocket from './src/hooks/useSocket';
 import Config from 'react-native-config';
 import userSlice from './src/slices/user';
-import axios, {AxiosError} from 'axios';
+import axios, {AxiosError, AxiosResponse} from 'axios';
 import {useAppDispatch} from './src/store';
 import {Alert} from 'react-native';
 import EncryptedStorage from 'react-native-encrypted-storage';
@@ -39,6 +39,14 @@ function AppInner() {
   const dispatch = useAppDispatch();
   const isLoggedIn = useSelector((state: RootState) => !!state.user.email);
   const [socket, disconnect] = useSocket();
+
+  useEffect(() => {
+    axios.interceptors.request.use();
+    axios.interceptors.response.use(
+      response => response,
+      () => {},
+    );
+  }, []);
 
   useEffect(() => {
     const callback = (data: any) => {
